@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import cl.puntogestion.plaplix.R
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.content_scrolling.*
 import javax.security.auth.Subject
 
 class DetailActivity : AppCompatActivity() {
@@ -25,20 +26,22 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout).title = title
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            composeEmail(Array(2, ["sdfsd", "dffsd"]), "prueba")
+            enviarEmail()
         }
     }
 
     override fun onStart() {
         super.onStart()
-
+        viewModel.selected.observe(this, Observer {
+            textViewDetalle.text = it.name
+        })
     }
 
-    fun composeEmail(addresses: Array<String>, subject: String) {
+    fun enviarEmail() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:") // only email apps should handle this
-            putExtra(Intent.EXTRA_EMAIL, addresses)
-            putExtra(Intent.EXTRA_SUBJECT, subject)
+            data = Uri.parse("mailto:arebolledo@puntogestion.cl") // only email apps should handle this
+            putExtra(Intent.EXTRA_EMAIL, "addresses")
+            putExtra(Intent.EXTRA_SUBJECT, "subject")
         }
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
